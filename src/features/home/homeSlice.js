@@ -4,6 +4,8 @@ import { fetchNews } from './homeAPI';
 const initialState = {
   news: [],
   status: 'idle',
+  currentPage: 1,
+  hasMorePages: true,
 };
 
 // The function below is called a thunk and allows us to perform async logic. It
@@ -13,8 +15,8 @@ const initialState = {
 // typically used to make async requests.
 export const fetchNewsAsync = createAsyncThunk(
   'home/fetchNews',
-  async () => {
-    const response = await fetchNews();
+  async (currentPage) => {
+    const response = await fetchNews(currentPage);
     // The value we return becomes the `fulfilled` action payload
     return response;
   }
@@ -25,12 +27,12 @@ export const homeSlice = createSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
-    increment: (state) => {
+    incrementPage: (state) => {
       // Redux Toolkit allows us to write "mutating" logic in reducers. It
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
-      state.value += 1;
+      state.currentPage += 1;
     },
     decrement: (state) => {
       state.value -= 1;
@@ -49,18 +51,23 @@ export const homeSlice = createSlice({
       })
       .addCase(fetchNewsAsync.fulfilled, (state, action) => {
         state.status = 'idle';
-        state.news = action.payload;
+        console.log(action.payload);
+        state.news.push(...action.payload.articles);
+        if(action.payload.articles.length < 20){
+            state.hasMorePages = false;
+        }
       });
   },
 });
 
-export const { increment, decrement, incrementByAmount } = homeSlice.actions;
+export const { incrementPage, decrement, incrementByAmount } = homeSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
 export const news = (state) => state.home.news;
-
+export const currentPage = (state) => state.home.currentPage;
+export const hasMorePages = (state) => state.home.hasMorePages;
 // We can also write thunks by hand, which may contain both sync and async logic.
 // Here's an example of conditionally dispatching actions based on current state.
 export const incrementIfOdd = (amount) => (dispatch, getState) => {

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // A mock function to mimic making an async request for data
-export function fetchNews() {
+export function fetchNews(currentPage) {
     const key = process.env.REACT_APP_API_KEY;
     const country = "us";
     const config = {
@@ -12,10 +12,10 @@ export function fetchNews() {
     axios.defaults.headers.common = {
         "X-API-Key": key,
     };
-    const url = "https://newsapi.org/v2/top-headlines?country=" + country;
-    return axios.get(url)
+    const url = "https://newsapi.org/v2/top-headlines?country=" + country +"&pageSize=20&page=" + currentPage;
+    return axios.get(url, config)
             .then(res => {
-                return res.data.articles;
+                return res.data;
         });
   }
   

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card } from '../card/Card';
 import {
@@ -8,34 +8,27 @@ import {
   currentPage,
   fetchNewsAsync,
 } from './homeSlice';
-import styles from './Home.module.css';
 
 export function Home() {
   const data = useSelector(news);
   const currentPageIndicator = useSelector(currentPage);
   const moreDataAvailable = useSelector(hasMorePages);
-  console.log(moreDataAvailable);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(fetchNewsAsync(currentPageIndicator));
-    dispatch(incrementPage());
-  },[]);
+    dispatch(fetchNewsAsync(currentPageIndicator))
+  },[currentPageIndicator]);
   
-  const newsList = data.map((item) =>
-    <Card key={item.url} data={item}/>
+  const newsList = data.map((item, index) =>
+    <Card key={index} data={item} id={index}/>
   );
 
-  function incrementPageAndFetchNews(payload) {
-        dispatch(incrementPage(payload))
-        dispatch(fetchNewsAsync(payload))
-      }
   return (
     <div>
-      <div className={styles.cardsContainer}>
+      <div className="cardsContainer">
         { newsList }
       </div>
-      <div>
-        {moreDataAvailable ? <button onClick={() => incrementPageAndFetchNews(currentPageIndicator)}>Read more</button> : null}
+      <div className="button-container">
+        {moreDataAvailable ? <button className="button" onClick={() => dispatch(incrementPage())}>Read more</button> : null}
       </div>
     </div>
   );

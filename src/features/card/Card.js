@@ -1,20 +1,19 @@
 import React from 'react';
-import styles from '../home/Home.module.css';
+import { Link } from "react-router-dom";
 
-export function Card({data}) {
-  
+export function Card({data, id}) {
   return (
-    <div className={styles.cardItem + ' ' + styles.animateCard}>
-      <div className={styles.cardItem__header}>
+    <div className="cardItem animateCard">
+      <div className="cardItem__header">
         <img src={data.urlToImage ?? 'placeholder.png'} alt={data.source.name}></img>
         <h4>{data.title}</h4>
       </div>
       <p> {data.description} </p>
-      <div className={styles.cardItem__overlay}>
+      <Link to={"/details/" + id}  className="cardItem__overlay "state={data}>
         <p>
           <strong>READ FULL ARTICLE</strong>
         </p>
-      </div>
+      </Link>
     </div>
   );
 }

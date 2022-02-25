@@ -20,8 +20,10 @@ export function fetchNews(currentPage) {
                  });
   }
 
-export function searchNews(searchQuery) {
-   const url = "https://newsapi.org/v2/everything?q=" + searchQuery;
+export function searchNews({searchParameters}) {
+   const {searchTerm, searchCategory} = searchParameters;
+   const url = "https://newsapi.org/v2/everything?q=" + searchTerm + "&sortBy=" + searchCategory;
+   
    return axios.get(url, config)
                .then(res => {
                  return res.data;

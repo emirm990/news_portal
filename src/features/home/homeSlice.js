@@ -27,8 +27,8 @@ export const fetchNewsAsync = createAsyncThunk(
 
 export const searchNewsAsync = createAsyncThunk(
   'home/searchNews',
-  async (searchQuery) => {
-    const response = await searchNews(searchQuery);
+  async ({...searchParameters}) => {
+    const response = await searchNews({searchParameters});
     // The value we return becomes the `fulfilled` action payload
     return response;
   }

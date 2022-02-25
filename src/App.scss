@@ -3,12 +3,18 @@
   .navigation{
     display: flex;
     justify-content: space-between;
+    align-items: center;
     ul{
       padding-left: 2%;
     }
     p{
       padding-right: 2%;
     }
+  }
+  #search{
+    display: flex;
+    height: 30px;
+    align-items: stretch;
   }
 }
 a{

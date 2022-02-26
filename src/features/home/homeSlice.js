@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { fetchNews, searchNews } from './homeAPI';
+import { fetchNews } from './homeAPI';
 
 const initialState = {
   news: [],
@@ -9,6 +9,9 @@ const initialState = {
   details: {},
   appendResults: false,
   lastUpdatedAt: null,
+  endPoint: 'top-headlines',
+  searchTerm: null,
+  searchCategory: null,
 };
 
 // The function below is called a thunk and allows us to perform async logic. It
@@ -18,45 +21,38 @@ const initialState = {
 // typically used to make async requests.
 export const fetchNewsAsync = createAsyncThunk(
   'home/fetchNews',
-  async (currentPage) => {
-    const response = await fetchNews(currentPage);
+  async ({...searchParameters}, thunkAPI) => {
+    const response = await fetchNews({searchParameters});
     // The value we return becomes the `fulfilled` action payload
     return response;
   }
 );
 
-export const searchNewsAsync = createAsyncThunk(
-  'home/searchNews',
-  async ({...searchParameters}) => {
-    const response = await searchNews({searchParameters});
-    // The value we return becomes the `fulfilled` action payload
-    return response;
-  }
-);
 export const homeSlice = createSlice({
   name: 'home',
   initialState,
-  // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
     incrementPage: (state) => {
-      // Redux Toolkit allows us to write "mutating" logic in reducers. It
-      // doesn't actually mutate the state because it uses the Immer library,
-      // which detects changes to a "draft state" and produces a brand new
-      // immutable state based off those changes
       state.currentPage += 1;
       state.appendResults = true;
-    },
-    decrement: (state) => {
-      state.value -= 1;
-    },
-    // Use the PayloadAction type to declare the contents of `action.payload`
-    incrementByAmount: (state, action) => {
-      state.value += action.payload;
     },
 
     getDetails: (state, action) => {
       state.details = state.news[action.payload];
       state.appendResults = false;
+    },
+
+    changeEndPoint: (state, action) => {
+      state.endPoint = action.payload.endPoint;
+      state.appendResults = false;
+    },
+
+    setSearchCategory: (state, action) => {
+      state.searchCategory = action.payload;
+    },
+
+    setSearchTerm: (state, action) => {
+      state.searchTerm = action.payload;
     }
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -81,23 +77,10 @@ export const homeSlice = createSlice({
         }
         state.lastUpdatedAt = new Date().toLocaleString("en-GB");;
       })
-      .addCase(searchNewsAsync.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(searchNewsAsync.fulfilled, (state, action) => {
-          state.news = action.payload.articles;
-        
-          if(action.payload.articles.length < 20){
-              state.hasMorePages = false;
-          }else{
-              state.hasMorePages = true;
-          }
-          state.lastUpdatedAt = new Date().toLocaleString("en-GB");;
-      });
   },
 });
 
-export const { incrementPage, decrement, incrementByAmount, getDetails } = homeSlice.actions;
+export const { incrementPage, decrement, incrementByAmount, getDetails,changeEndPoint } = homeSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
@@ -107,6 +90,9 @@ export const currentPage = (state) => state.home.currentPage;
 export const hasMorePages = (state) => state.home.hasMorePages;
 export const details = (state) => state.home.details;
 export const lastUpdatedAt = (state) => state.home.lastUpdatedAt;
+export const currentEndPoint = (state) => state.home.endPoint;
+export const getSearchTerm = (state) => state.home.searchTerm;
+export const getSearchCategory = (state) => state.home.searchCategory;
 // We can also write thunks by hand, which may contain both sync and async logic.
 // Here's an example of conditionally dispatching actions based on current state.
 export const getNewsById = (id) => (dispatch, getState) => {

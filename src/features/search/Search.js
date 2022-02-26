@@ -1,24 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { searchNewsAsync,fetchNewsAsync, currentPage } from '../home/homeSlice';
+import { fetchNewsAsync, currentPage, currentEndPoint, changeEndPoint} from '../home/homeSlice';
 export function Search() {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchCategory, setSearchCategory] = useState('relevancy');
   const dispatch = useDispatch();
   const currentPageIndicator = useSelector(currentPage);
+  const endPoint = useSelector(currentEndPoint);
 
-  function handleSearch(){
-      dispatch(searchNewsAsync({'searchTerm' : searchTerm, 'searchCategory': searchCategory}))
+  function handleSearch(forceEndPoint){
+      forceEndPoint = forceEndPoint || endPoint;
+      dispatch(fetchNewsAsync({'endPoint': forceEndPoint, currentPageIndicator, 'searchTerm': searchTerm, 'searchCategory': searchCategory}));
   }
   function handleCategoryChange(e){
      setSearchCategory(e.target.value);
-     handleSearch();
   }
   useEffect(() => {
       if(!searchTerm){
-        dispatch(fetchNewsAsync(currentPageIndicator))
+        dispatch(changeEndPoint({'endPoint': 'top-headlines'}));
+        handleSearch('top-headlines');
+      }else{
+        dispatch(changeEndPoint({'endPoint': 'everything'}));
       }
   } ,[searchTerm, searchCategory]);
+
   function selectElement(){
       return(
         <select name="category" id="category" onChange={e => handleCategoryChange(e)}>
@@ -32,7 +37,7 @@ export function Search() {
     <form id="search" onSubmit={e => e.preventDefault()}>
         <input type="search" placeholder="Search..." onChange={e => setSearchTerm(e.target.value)} />
         {searchTerm ? selectElement() : null}
-        <button onClick={e => handleSearch(e)}>Search</button>
+        <button onClick={e => handleSearch()}>Search</button>
     </form>
   );
 }

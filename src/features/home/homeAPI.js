@@ -1,7 +1,9 @@
 import axios from "axios";
 
 const key = process.env.REACT_APP_API_KEY;
-const country = "us";
+const country = process.env.REACT_APP_COUNTRY;
+const pageSize = process.env.REACT_APP_PAGE_SIZE;
+const url = "https://newsapi.org/v2/";
 const config = {
     headers: {
       "Content-Type": "application/json",
@@ -10,23 +12,22 @@ const config = {
 axios.defaults.headers.common = {
     "X-API-Key": key,
     };
-// A mock function to mimic making an async request for data
-export function fetchNews(currentPage) {
-    
-    const url = "https://newsapi.org/v2/top-headlines?country=" + country +"&pageSize=20&page=" + currentPage;
-    return axios.get(url, config)
+
+export function fetchNews({searchParameters}) {
+    const {searchTerm, searchCategory ,endPoint, currentPageIndicator} = searchParameters;
+    let fetchUrl = url + endPoint + "?&pageSize="+ pageSize +"&page=" + currentPageIndicator;
+    if(searchTerm){
+      fetchUrl += "&q=" + searchTerm;
+    }
+    if(searchCategory){
+      fetchUrl += "&sortBy=" + searchCategory;
+    }
+    if(endPoint === "top-headlines"){
+      fetchUrl += "&country=" + country;
+    }
+
+    return axios.get(fetchUrl, config)
                 .then(res => {
                   return res.data;
                  });
   }
-
-export function searchNews({searchParameters}) {
-   const {searchTerm, searchCategory} = searchParameters;
-   const url = "https://newsapi.org/v2/everything?q=" + searchTerm + "&sortBy=" + searchCategory;
-   
-   return axios.get(url, config)
-               .then(res => {
-                 return res.data;
-                });
-}
-  

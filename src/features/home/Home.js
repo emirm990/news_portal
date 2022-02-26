@@ -7,15 +7,18 @@ import {
   news,
   currentPage,
   fetchNewsAsync,
+  currentEndPoint,
 } from './homeSlice';
 
 export function Home() {
   const data = useSelector(news);
+  const endPoint = useSelector(currentEndPoint);
   const currentPageIndicator = useSelector(currentPage);
   const moreDataAvailable = useSelector(hasMorePages);
+  
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(fetchNewsAsync(currentPageIndicator))
+    dispatch(fetchNewsAsync({currentPageIndicator,'endPoint': endPoint}));
   },[currentPageIndicator]);
   
   const newsList = data.map((item, index) =>

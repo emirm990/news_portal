@@ -10,8 +10,8 @@ const initialState = {
   appendResults: false,
   lastUpdatedAt: null,
   endPoint: 'top-headlines',
-  searchTerm: null,
-  searchCategory: null,
+  searchTerm: '',
+  searchCategory: '',
 };
 
 // The function below is called a thunk and allows us to perform async logic. It
@@ -22,6 +22,10 @@ const initialState = {
 export const fetchNewsAsync = createAsyncThunk(
   'home/fetchNews',
   async ({...searchParameters}, thunkAPI) => {
+    const state = thunkAPI.getState();
+    const { searchTerm, searchCategory } = state.home;
+    searchParameters.searchTerm = searchTerm;
+    searchParameters.searchCategory = searchCategory;
     const response = await fetchNews({searchParameters});
     // The value we return becomes the `fulfilled` action payload
     return response;
@@ -44,6 +48,8 @@ export const homeSlice = createSlice({
 
     changeEndPoint: (state, action) => {
       state.endPoint = action.payload.endPoint;
+      state.searchCategory = action.payload.searchCategory;
+      state.searchTerm = action.payload.searchTerm;
       state.appendResults = false;
     },
 
@@ -53,6 +59,14 @@ export const homeSlice = createSlice({
 
     setSearchTerm: (state, action) => {
       state.searchTerm = action.payload;
+    },
+
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+    },
+
+    setEndPoint: (state, action) => {
+      state.endPoint = action.payload;
     }
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -75,12 +89,12 @@ export const homeSlice = createSlice({
         }else{
             state.hasMorePages = true;
         }
-        state.lastUpdatedAt = new Date().toLocaleString("en-GB");;
+        state.lastUpdatedAt = new Date().toLocaleString(process.env.REACT_APP_LOCALE);;
       })
   },
 });
 
-export const { incrementPage, decrement, incrementByAmount, getDetails,changeEndPoint } = homeSlice.actions;
+export const { incrementPage, decrement, incrementByAmount, getDetails, changeEndPoint, setSearchCategory, setSearchTerm, setCurrentPage, setEndPoint } = homeSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of

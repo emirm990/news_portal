@@ -19,7 +19,7 @@ export function Details() {
   return (
     <div className="details-container">
         <div className="details-image-container">
-            <img src={data.urlToImage} alt=""/>
+            <img src={data.urlToImage ?? '/placeholder.png'} alt=""/>
             <div className='details-image-info'>
                 <p>{data.author}</p>
                 <p>{formatDate(data.publishedAt)}</p>

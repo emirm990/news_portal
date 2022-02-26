@@ -13,8 +13,7 @@ axios.defaults.headers.common = {
     "X-API-Key": key,
     };
 
-export function fetchNews({searchParameters}) {
-    const {searchTerm, searchCategory ,endPoint, currentPageIndicator} = searchParameters;
+function generateUrl(endPoint, currentPageIndicator, searchTerm, searchCategory){
     let fetchUrl = url + endPoint + "?&pageSize="+ pageSize +"&page=" + currentPageIndicator;
     if(searchTerm){
       fetchUrl += "&q=" + searchTerm;
@@ -25,6 +24,12 @@ export function fetchNews({searchParameters}) {
     if(endPoint === "top-headlines"){
       fetchUrl += "&country=" + country;
     }
+
+    return fetchUrl;
+}
+export function fetchNews({searchParameters}) {
+    const {searchTerm, searchCategory ,endPoint, currentPageIndicator} = searchParameters;
+    const fetchUrl = generateUrl(endPoint, currentPageIndicator, searchTerm, searchCategory);
 
     return axios.get(fetchUrl, config)
                 .then(res => {

@@ -51,7 +51,7 @@ export function Search() {
     <form id="search" onSubmit={e => e.preventDefault()}>
         <input type="search" value={searchTerm} placeholder="Search..." onChange={e => dispatch(setSearchTerm(e.target.value))} />
         {searchTerm ? selectElement() : null}
-        <button onClick={e => handleSearch()}>Search</button>
+        <button className="button no-padding" onClick={e => handleSearch()}>Search</button>
     </form>
   );
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import { Navigation } from './layouts/navigation/Navigation';
 import { Home } from './features/home/Home';
 import { Details } from './features/details/Details';
+import { Footer } from './layouts/footer/Footer';
 import { Routes, Route } from "react-router-dom";
 import './App.scss';
 
@@ -16,6 +17,7 @@ function App() {
             <Route path="details/:id" element={<Details />} />
           </Routes>
       </div>
+      <Footer />
     </React.Fragment>
   );
 }

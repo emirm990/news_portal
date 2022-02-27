@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { fetchNews } from './homeAPI';
 
+const pageSize = process.env.REACT_APP_PAGE_SIZE || 20;
 const initialState = {
   news: [],
   status: 'idle',
@@ -12,6 +13,7 @@ const initialState = {
   endPoint: 'top-headlines',
   searchTerm: '',
   searchCategory: '',
+  theme: 'light',
 };
 
 // The function below is called a thunk and allows us to perform async logic. It
@@ -67,6 +69,10 @@ export const homeSlice = createSlice({
 
     setEndPoint: (state, action) => {
       state.endPoint = action.payload;
+    },
+
+    setTheme: (state, action) => {
+      state.theme = action.payload;
     }
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -84,17 +90,18 @@ export const homeSlice = createSlice({
           state.currentPage = 1;
         }
         
-        if(action.payload.articles.length < 20){
+        if(action.payload.articles.length < pageSize){
             state.hasMorePages = false;
         }else{
             state.hasMorePages = true;
         }
+        state.status = 'idle';
         state.lastUpdatedAt = new Date().toLocaleString(process.env.REACT_APP_LOCALE);;
       })
   },
 });
 
-export const { incrementPage, decrement, incrementByAmount, getDetails, changeEndPoint, setSearchCategory, setSearchTerm, setCurrentPage, setEndPoint } = homeSlice.actions;
+export const { incrementPage, decrement, incrementByAmount, getDetails, changeEndPoint, setSearchCategory, setSearchTerm, setCurrentPage, setEndPoint, setTheme } = homeSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
@@ -107,6 +114,8 @@ export const lastUpdatedAt = (state) => state.home.lastUpdatedAt;
 export const currentEndPoint = (state) => state.home.endPoint;
 export const getSearchTerm = (state) => state.home.searchTerm;
 export const getSearchCategory = (state) => state.home.searchCategory;
+export const getStatus = (state) => state.home.status;
+export const getTheme = (state) => state.home.theme;
 // We can also write thunks by hand, which may contain both sync and async logic.
 // Here's an example of conditionally dispatching actions based on current state.
 export const getNewsById = (id) => (dispatch, getState) => {

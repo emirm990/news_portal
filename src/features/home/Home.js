@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Card } from '../card/Card';
+import { Loader } from '../../layouts/helpers/Loader';
 import {
   incrementPage,
   hasMorePages,
@@ -8,6 +9,7 @@ import {
   currentPage,
   fetchNewsAsync,
   currentEndPoint,
+  getStatus,
 } from './homeSlice';
 
 export function Home() {
@@ -15,6 +17,7 @@ export function Home() {
   const endPoint = useSelector(currentEndPoint);
   const currentPageIndicator = useSelector(currentPage);
   const moreDataAvailable = useSelector(hasMorePages);
+  const status = useSelector(getStatus);
   
   const dispatch = useDispatch();
   useEffect(() => {
@@ -26,13 +29,14 @@ export function Home() {
   );
 
   return (
-    <div>
-      <div className="cardsContainer">
-        { newsList }
+      <div>
+        <div className="cardsContainer">
+          { data.length > 0 ? newsList : <h3 className="no-results">No results...</h3> } 
+        </div>
+        <div className="button-container">
+          {moreDataAvailable ? <button className="button" onClick={() => dispatch(incrementPage())}>Read more</button> : null}
+        </div>
+        <Loader status={status}/>
       </div>
-      <div className="button-container">
-        {moreDataAvailable ? <button className="button" onClick={() => dispatch(incrementPage())}>Read more</button> : null}
-      </div>
-    </div>
   );
 }

@@ -10,6 +10,7 @@ import {
   setSearchCategory, 
   setSearchTerm
 } from '../home/homeSlice';
+import { useNavigate } from "react-router-dom";
 
 export function Search() {
 
@@ -18,10 +19,14 @@ export function Search() {
   const dispatch = useDispatch();
   const currentPageIndicator = useSelector(currentPage);
   const endPoint = useSelector(currentEndPoint);
-  
-  function handleSearch(forceEndPoint){
+  const navigate = useNavigate();
+
+  function handleSearch(e,forceEndPoint){
       forceEndPoint = forceEndPoint || endPoint;
       dispatch(fetchNewsAsync({'endPoint': forceEndPoint, currentPageIndicator, 'searchTerm': searchTerm, 'searchCategory': searchCategory}));
+      if(e && e.type === 'click'){
+        navigate('/');
+      }
   }
 
   function handleCategoryChange(e){
@@ -31,7 +36,7 @@ export function Search() {
   useEffect(() => {
       if(!searchTerm){
         dispatch(changeEndPoint({'endPoint': 'top-headlines', 'searchTerm': '', 'searchCategory': ''}));
-        handleSearch('top-headlines');
+        handleSearch(false,'top-headlines');
       }else{
         dispatch(changeEndPoint({'endPoint': 'everything','searchTerm': searchTerm, 'searchCategory': searchCategory}));
       }
@@ -51,7 +56,7 @@ export function Search() {
     <form id="search" onSubmit={e => e.preventDefault()}>
         <input type="search" value={searchTerm} placeholder="Search..." onChange={e => dispatch(setSearchTerm(e.target.value))} />
         {searchTerm ? selectElement() : null}
-        <button className="button no-padding" onClick={e => handleSearch()}>Search</button>
+        <button className="button no-padding" onClick={e => handleSearch(e,false)}>Search</button>
     </form>
   );
 }

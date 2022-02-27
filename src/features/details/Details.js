@@ -5,7 +5,7 @@ import { getNewsById, details} from '../home/homeSlice';
 
 export function Details() {
 
-  const [dataFromSession, setDataFromSession] = useState(sessionStorage.getItem('data') != 'undefined' || !sessionStorage.getItem('data') ? JSON.parse(sessionStorage.getItem('data')) : {});
+  const [dataFromSession, setDataFromSession] = useState(sessionStorage.getItem('data') !== 'undefined' || !sessionStorage.getItem('data') ? JSON.parse(sessionStorage.getItem('data')) : {});
   let { id } = useParams();
   const dispatch = useDispatch();
   dispatch(getNewsById(Number(id)));

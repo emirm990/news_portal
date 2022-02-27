@@ -1,4 +1,53 @@
+@import "../src/layouts/helpers/loader.scss";
+@import "../src/features/theme_switch/themeSwitch.scss";
+
+$text-light: black;
+$text-dark: #3c3c3c;
+$bg-light: #ebebeb;
+$bg-dark: #3c3c3c;
+$card-light: #fff;
+$card-dark: lightgray;
+
+.App{
+  &.light{
+    color: $text-light;
+    background-color: $bg-light;
+    .details-container{
+      background-color: $card-light;
+    }
+    .cardItem{
+      background-color: $card-light;
+    }
+  }
+  &.dark{
+    color: $text-dark;
+    background-color: $bg-dark;
+    .details-container{
+      background-color: $card-dark;
+    }
+    .cardItem{
+      background-color: $card-dark;
+    }
+  }
+}
+#footer{
+  border-top: 1px solid lightgray;
+  .footer-container{
+    height: 100%;
+    .footer-text{
+      margin: 0;
+      padding: 20px;
+    }
+    &.light{
+      background-color: $card-light;
+    }
+    &.dark{
+      background-color: $card-dark;
+    }
+  }
+}
 #navigation{
+  border-bottom: 1px solid lightgray;
   .home{
     height: 30px;
     transition: box-shadow 0.2s ease-in-out;
@@ -11,6 +60,17 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    &.light{
+      background-color: $card-light;
+    }
+    &.dark{
+      background-color: $card-dark;
+    }
+    .left-part{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
     ul{
       padding-left: 2%;
       padding-right: 2%;
@@ -50,6 +110,7 @@ a{
 }
 .App{
   padding: 2%;
+  background-color: #ebebeb;
 }
 .cardsContainer{
   display: flex;
@@ -66,6 +127,8 @@ a{
   cursor: pointer;
   transition: box-shadow 0.2s ease-in-out;
   position: relative;
+  background-color: #fff;
+  overflow: hidden;
   &:hover{
     box-shadow: 0px 10px 13px -7px #000000, 5px 5px 15px 5px rgba(0,0,0,0);
     .cardItem__overlay{
@@ -133,6 +196,7 @@ a{
   border-radius: 4px;
   border: 1px solid lightgray;
   min-height: 85vh;
+  overflow: hidden;
   .details-content{
     padding: 20px;
     h1{
@@ -149,7 +213,7 @@ a{
     }
     .details-image-info{
       position: absolute;
-      bottom: 0;
+      bottom: 4px;
       left: 0;
       width: 100%;
       display: flex;

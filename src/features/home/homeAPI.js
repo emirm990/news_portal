@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const key = process.env.REACT_APP_API_KEY;
-const country = process.env.REACT_APP_COUNTRY;
-const pageSize = process.env.REACT_APP_PAGE_SIZE;
+const country = process.env.REACT_APP_COUNTRY || "us";
+const pageSize = process.env.REACT_APP_PAGE_SIZE || 20;
 const url = "https://newsapi.org/v2/";
 const config = {
     headers: {

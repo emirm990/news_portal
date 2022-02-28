@@ -1,6 +1,6 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
 
-Make new .env file in project root and copy values from .env.example to it and enter your [newsapi](https://newsapi.org/accountkey) to REACT_APP_API_KEY
+Make new .env file in project root and copy values from .env.example to it and enter your [newsapi.org api key](https://newsapi.org/accountkey) to REACT_APP_API_KEY
 
 ## Available Scripts
 
